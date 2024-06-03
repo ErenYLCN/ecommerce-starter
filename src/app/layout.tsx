@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "@/core/ui/_globals.scss";
 
-const inter = Inter({ subsets: ["latin"] });
+import "@/core/ui/_globals.scss";
+import { cn } from "@/core/util/utils";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "E-commerce Boilerplate",
@@ -16,7 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang={"en"}>
-      <body className={inter.className}>{children}</body>
+      <body
+        className={cn(
+          "bg-background min-h-screen font-sans antialiased",
+          inter.variable,
+        )}
+      >
+        {children}
+      </body>
     </html>
   );
 }
