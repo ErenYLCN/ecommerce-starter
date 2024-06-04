@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { useFormStatus } from "react-dom";
+
 import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
 import { Label } from "@/component/ui/label";
@@ -46,7 +48,12 @@ export default function ProductForm() {
         <Input type={"file"} id={"image"} name={"image"} required />
       </div>
 
-      <Button type={"submit"}>{"Save"}</Button>
+      <SubmitButton />
     </form>
   );
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return <Button type={"submit"}>{pending ? "Saving..." : "Save"}</Button>;
 }
