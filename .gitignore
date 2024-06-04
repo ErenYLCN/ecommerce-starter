@@ -39,6 +39,3 @@ next-env.d.ts
 /products
 /public/products
 
-#prisma
-/prisma/dev.db
-/prisma/dev.db-journal
