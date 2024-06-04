@@ -21,30 +21,35 @@ const addSchema = z.object({
 })
 
 export async function addProduct(_prevState: unknown, formData: FormData) {
+  // TODO: Something is wrong here, find it
   const result = addSchema.safeParse(Object.fromEntries(formData.entries()))
   if (!result.success) {
     return result.error.formErrors.fieldErrors
   }
 
-  const data = result.data
+  const resultData = result.data
 
   await fs.mkdir("products", { recursive: true })
-  const filePath = `products/${crypto.randomUUID()}-${data.file.name}`
-  await fs.writeFile(filePath, Buffer.from(await data.file.arrayBuffer()))
+  const filePath = `products/${crypto.randomUUID()}-${resultData.file.name}`
+  await fs.writeFile(filePath, Buffer.from(await resultData.file.arrayBuffer()))
 
   await fs.mkdir("public/products", { recursive: true })
-  const imagePath = `/products/${crypto.randomUUID()}-${data.file.name}`
-  await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()))
+  const imagePath = `/products/${crypto.randomUUID()}-${resultData.file.name}`
+  await fs.writeFile(`public${imagePath}`, Buffer.from(await resultData.image.arrayBuffer()))
+
+  const data = {
+    isAvailableForPurchase: false,
+    name: resultData.name,
+    description: resultData.description,
+    priceInCents: resultData.priceInCents,
+    filePath,
+    imagePath,
+  }
+
+  console.log(data, resultData, result)
 
   prisma.product.create({
-    data: {
-      isAvailableForPurchase: false,
-      name: data.name,
-      description: data.description,
-      priceInCents: data.priceInCents,
-      filePath,
-      imagePath,
-    }
+    data,
   })
 
   redirect("/admin/products")
