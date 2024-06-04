@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { useFormStatus } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 
 import { Button } from "@/component/ui/button";
 import { Input } from "@/component/ui/input";
@@ -13,13 +13,15 @@ import { formatCurrency } from "@/core/util/format/formatUtils";
 import { addProduct } from "../../_actions/product";
 
 export default function ProductForm() {
+  const [error, action] = useFormState(addProduct, {});
   const [priceInCents, setPriceInCents] = useState<number>();
 
   return (
-    <form action={addProduct} className={"mt-4 space-y-8"}>
+    <form action={action} className={"mt-4 space-y-8"}>
       <div className={"space-y-2"}>
         <Label htmlFor={"name"}>{"Name"}</Label>
         <Input type={"text"} id={"name"} name={"name"} required />
+        {error.name && <div className={"text-destructive"}>{error.name}</div>}
       </div>
       <div className={"space-y-2"}>
         <Label htmlFor={"priceInCents"}>{"Price in cents"}</Label>
@@ -34,18 +36,22 @@ export default function ProductForm() {
         <div className={"text-muted-foreground"}>
           {formatCurrency((priceInCents || 0) / 100)}
         </div>
+        {error.priceInCents && <div className={"text-destructive"}>{error.priceInCents}</div>}
       </div>
       <div className={"space-y-2"}>
         <Label htmlFor={"description"}>{"Description"}</Label>
         <Textarea id={"description"} name={"description"} required />
+        {error.description && <div className={"text-destructive"}>{error.description}</div>}
       </div>
       <div className={"space-y-2"}>
         <Label htmlFor={"file"}>{"File"}</Label>
         <Input type={"file"} id={"file"} name={"file"} required />
+        {error.file && <div className={"text-destructive"}>{error.file}</div>}
       </div>
       <div className={"space-y-2"}>
         <Label htmlFor={"image"}>{"Image"}</Label>
         <Input type={"file"} id={"image"} name={"image"} required />
+        {error.image && <div className={"text-destructive"}>{error.image}</div>}
       </div>
 
       <SubmitButton />
@@ -55,5 +61,10 @@ export default function ProductForm() {
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  return <Button type={"submit"}>{pending ? "Saving..." : "Save"}</Button>;
+  return <Button 
+    type={"submit"}
+    disabled={pending}
+  >
+    {pending ? "Saving..." : "Save"}
+  </Button>;
 }
