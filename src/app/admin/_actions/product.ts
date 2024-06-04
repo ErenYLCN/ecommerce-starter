@@ -21,7 +21,6 @@ const addSchema = z.object({
 })
 
 export async function addProduct(_prevState: unknown, formData: FormData) {
-  // TODO: Something is wrong here, find it
   const result = addSchema.safeParse(Object.fromEntries(formData.entries()))
   if (!result.success) {
     return result.error.formErrors.fieldErrors
@@ -34,7 +33,7 @@ export async function addProduct(_prevState: unknown, formData: FormData) {
   await fs.writeFile(filePath, Buffer.from(await resultData.file.arrayBuffer()))
 
   await fs.mkdir("public/products", { recursive: true })
-  const imagePath = `/products/${crypto.randomUUID()}-${resultData.file.name}`
+  const imagePath = `/products/${crypto.randomUUID()}-${resultData.image.name}`
   await fs.writeFile(`public${imagePath}`, Buffer.from(await resultData.image.arrayBuffer()))
 
   const data = {
@@ -46,11 +45,10 @@ export async function addProduct(_prevState: unknown, formData: FormData) {
     imagePath,
   }
 
-  console.log(data, resultData, result)
-
-  prisma.product.create({
+  await prisma.product.create({
     data,
   })
+
 
   redirect("/admin/products")
 }
