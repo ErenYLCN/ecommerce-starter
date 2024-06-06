@@ -1,4 +1,4 @@
-import { MoreVertical } from "lucide-react";
+import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/component/ui/button";
@@ -82,7 +82,17 @@ async function ProductsTable() {
         {products.map((product) => (
           <TableRow key={product.id}>
             <TableCell>
-              {product.isAvailableForPurchase ? "✅" : "❌"}
+              {product.isAvailableForPurchase ? (
+                <>
+                  <span className={"sr-only"}>{"Available"}</span>
+                  <CheckCircle2 />
+                </>
+              ) : (
+                <>
+                  <span className={"sr-only "}>{"Unavailable"}</span>
+                  <XCircle className={"stroke-destructive"} />
+                </>
+              )}
             </TableCell>
 
             <TableCell>{product.name}</TableCell>
