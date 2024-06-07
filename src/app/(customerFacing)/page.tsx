@@ -22,7 +22,7 @@ export default function HomePage() {
     </main>
   );
 
-  function getMostPopularProducts() {
+  async function getMostPopularProducts() {
     return prisma.product.findMany({
       where: {
         isAvailableForPurchase: true,
@@ -34,7 +34,7 @@ export default function HomePage() {
     });
   }
 
-  function getNewestProducts() {
+  async function getNewestProducts() {
     return prisma.product.findMany({
       where: {
         isAvailableForPurchase: true,
