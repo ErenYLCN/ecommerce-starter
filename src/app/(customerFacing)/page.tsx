@@ -1,8 +1,13 @@
+import { Suspense } from "react";
+
 import { Product } from "@prisma/client";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-import { ProductCard } from "@/component/product-card/ProductCard";
+import {
+  ProductCard,
+  ProductCardSkeleton,
+} from "@/component/product-card/ProductCard";
 import { Button } from "@/component/ui/button";
 import prisma from "@/core/db/db";
 
@@ -66,9 +71,19 @@ async function ProductGridSection({
       </div>
 
       <div className={"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"}>
-        {products.map((product) => (
-          <ProductCard key={product.id} {...product} />
-        ))}
+        <Suspense
+          fallback={
+            <>
+              <ProductCardSkeleton />
+              <ProductCardSkeleton />
+              <ProductCardSkeleton />
+            </>
+          }
+        >
+          {products.map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
+        </Suspense>
       </div>
     </div>
   );
