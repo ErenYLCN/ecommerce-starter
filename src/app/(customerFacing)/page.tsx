@@ -9,14 +9,26 @@ import {
   ProductCardSkeleton,
 } from "@/component/product-card/ProductCard";
 import { Button } from "@/component/ui/button";
+import { cache } from "@/core/cache/cache";
 import prisma from "@/core/db/db";
 
 export default function HomePage() {
+  const cachedMostPopularProducts = cache(
+    getMostPopularProducts,
+    ["/", "getMostPopularProducts"],
+    { revalidate: 60 * 60 * 24 },
+  );
+  const cachedNewestProducts = cache(
+    getNewestProducts,
+    ["/", "getNewestProducts"],
+    { revalidate: 60 * 60 * 24 },
+  );
+
   return (
     <main className={"space-y-12"}>
       <ProductGridSection
         title={"Most popular"}
-        productGetter={getMostPopularProducts}
+        productGetter={cachedMostPopularProducts}
       />
       <ProductGridSection title={"Newest"} productGetter={getNewestProducts} />
     </main>
