@@ -30,7 +30,10 @@ export default function HomePage() {
         title={"Most popular"}
         productGetter={cachedMostPopularProducts}
       />
-      <ProductGridSection title={"Newest"} productGetter={getNewestProducts} />
+      <ProductGridSection
+        title={"Newest"}
+        productGetter={cachedNewestProducts}
+      />
     </main>
   );
 
