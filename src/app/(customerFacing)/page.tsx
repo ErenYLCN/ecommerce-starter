@@ -16,12 +16,12 @@ export default function HomePage() {
   const cachedMostPopularProducts = cache(
     getMostPopularProducts,
     ["/", "getMostPopularProducts"],
-    { revalidate: 60 * 60 * 24 },
+    { revalidate: DAY_IN_S },
   );
   const cachedNewestProducts = cache(
     getNewestProducts,
     ["/", "getNewestProducts"],
-    { revalidate: 60 * 60 * 24 },
+    { revalidate: DAY_IN_S },
   );
 
   return (
