@@ -10,6 +10,7 @@ import {
 } from "@/component/product-card/ProductCard";
 import { Button } from "@/component/ui/button";
 import { cache } from "@/core/cache/cache";
+import { DAY_IN_S } from "@/core/constant/time/timeConstants";
 import prisma from "@/core/db/db";
 
 export default function HomePage() {
