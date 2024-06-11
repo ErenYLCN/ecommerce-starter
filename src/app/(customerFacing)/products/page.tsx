@@ -4,18 +4,9 @@ import {
   ProductCard,
   ProductCardSkeleton,
 } from "@/component/product-card/ProductCard";
+import { cache } from "@/core/cache/cache";
+import { DAY_IN_S } from "@/core/constant/time/timeConstants";
 import prisma from "@/core/db/db";
-
-const getProducts = async () => {
-  return prisma.product.findMany({
-    where: {
-      isAvailableForPurchase: true,
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
-};
 
 export default function ProductsPage() {
   return (
@@ -39,9 +30,23 @@ export default function ProductsPage() {
 }
 
 async function ProductsSuspense() {
-  const products = await getProducts();
+  const cachedProducts = await cache(
+    () =>
+      prisma.product.findMany({
+        where: {
+          isAvailableForPurchase: true,
+        },
+        orderBy: {
+          name: "asc",
+        },
+      }),
+    ["/products", "products"],
+    {
+      revalidate: DAY_IN_S,
+    },
+  )();
 
-  return products.map((product) => (
+  return cachedProducts.map((product) => (
     <ProductCard key={product.id} {...product} />
   ));
 }
