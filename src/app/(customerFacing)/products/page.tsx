@@ -11,6 +11,9 @@ const getProducts = async () => {
     where: {
       isAvailableForPurchase: true,
     },
+    orderBy: {
+      name: "asc",
+    },
   });
 };
 
