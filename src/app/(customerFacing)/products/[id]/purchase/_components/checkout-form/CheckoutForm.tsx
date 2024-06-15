@@ -22,6 +22,7 @@ import {
   CardTitle,
 } from "@/component/ui/card";
 import { formatCurrency } from "@/core/util/format/formatUtils";
+import { wait } from "@/core/util/utils";
 
 export type CheckoutFormProps = {
   product: Product;
@@ -67,13 +68,19 @@ function Form({ priceInCents }: { priceInCents: number }) {
   const stripe = useStripe();
   const elements = useElements();
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+
+    console.log("Submitting form");
+
     if (stripe == null || elements == null) {
+      console.error("Stripe or elements not loaded");
       return;
     }
 
     setIsLoading(true);
+
+    await wait(5000);
 
     setIsLoading(false);
   }
@@ -94,9 +101,14 @@ function Form({ priceInCents }: { priceInCents: number }) {
 
         <CardFooter>
           <Button size={"lg"} disabled={stripe == null || elements == null}>
-            {isLoading
-              ? "Purchasing.."
-              : `Purchase - ${formatCurrency(priceInCents / 100)}`}
+            {isLoading ? (
+              <>
+                {"Purchasing.."}
+                <span className={"animate-blink"}>{"."}</span>
+              </>
+            ) : (
+              `Purchase - ${formatCurrency(priceInCents / 100)}`
+            )}
           </Button>
         </CardFooter>
       </Card>
