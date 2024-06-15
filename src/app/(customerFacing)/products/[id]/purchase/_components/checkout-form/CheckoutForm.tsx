@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { Product } from "@prisma/client";
 import {
   Elements,
+  LinkAuthenticationElement,
   PaymentElement,
   useElements,
   useStripe,
@@ -65,6 +66,8 @@ export default function CheckoutForm({
 
 function Form({ priceInCents }: { priceInCents: number }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
+
   const stripe = useStripe();
   const elements = useElements();
 
@@ -80,9 +83,27 @@ function Form({ priceInCents }: { priceInCents: number }) {
 
     setIsLoading(true);
 
-    await wait(5000);
+    // TODO: Check for existing order
 
-    setIsLoading(false);
+    stripe
+      .confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/stripe/purchase-success`,
+        },
+      })
+      .then(({ error }) => {
+        if (error.type === "card_error" || error.type === "validation_error") {
+          setErrorMessage(error.message as string);
+        } else {
+          setErrorMessage("An unexpected error occurred");
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+
+    await wait(5000);
   }
 
   return (
@@ -90,13 +111,18 @@ function Form({ priceInCents }: { priceInCents: number }) {
       <Card>
         <CardHeader>
           <CardTitle>{"Checkout"}</CardTitle>
-          <CardDescription className={"text-destructive"}>
-            {"Error"}
-          </CardDescription>
+          {errorMessage && (
+            <CardDescription className={"text-destructive"}>
+              {errorMessage}
+            </CardDescription>
+          )}
         </CardHeader>
 
         <CardContent>
           <PaymentElement />
+          <div className={"mt-4"}>
+            <LinkAuthenticationElement />
+          </div>
         </CardContent>
 
         <CardFooter>
