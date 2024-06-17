@@ -5,7 +5,8 @@ import prisma from "@/core/db/db";
 
 import CheckoutForm from "./_components/checkout-form/CheckoutForm";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+
 export default async function ProductPurchasePage({
   params: { id },
 }: {
