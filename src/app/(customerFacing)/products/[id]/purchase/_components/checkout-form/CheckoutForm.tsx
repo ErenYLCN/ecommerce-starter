@@ -67,6 +67,7 @@ export default function CheckoutForm({
 function Form({ priceInCents }: { priceInCents: number }) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [email, setEmail] = useState<string>();
 
   const stripe = useStripe();
   const elements = useElements();
@@ -74,9 +75,7 @@ function Form({ priceInCents }: { priceInCents: number }) {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    console.log("Submitting form");
-
-    if (stripe == null || elements == null) {
+    if (stripe == null || elements == null || email == null) {
       console.error("Stripe or elements not loaded");
       return;
     }
@@ -121,7 +120,9 @@ function Form({ priceInCents }: { priceInCents: number }) {
         <CardContent>
           <PaymentElement />
           <div className={"mt-4"}>
-            <LinkAuthenticationElement />
+            <LinkAuthenticationElement
+              onChange={(e) => setEmail(e.value.email)}
+            />
           </div>
         </CardContent>
 
