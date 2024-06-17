@@ -13,6 +13,7 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 import Image from "next/image";
 
+import { userOrderExists } from "@/app/(customerFacing)/orders/_actions/orders";
 import { Button } from "@/component/ui/button";
 import {
   Card,
@@ -58,13 +59,19 @@ export default function CheckoutForm({
         </div>
       </div>
       <Elements options={{ clientSecret }} stripe={stripe}>
-        <Form priceInCents={product.priceInCents} />
+        <Form priceInCents={product.priceInCents} productId={product.id} />
       </Elements>
     </div>
   );
 }
 
-function Form({ priceInCents }: { priceInCents: number }) {
+function Form({
+  priceInCents,
+  productId,
+}: {
+  priceInCents: number;
+  productId: string;
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
   const [email, setEmail] = useState<string>();
@@ -82,7 +89,13 @@ function Form({ priceInCents }: { priceInCents: number }) {
 
     setIsLoading(true);
 
-    // TODO: Check for existing order
+    const orderExists = await userOrderExists(email, productId);
+
+    if (orderExists) {
+      setErrorMessage("You have already purchased this product");
+      setIsLoading(false);
+      return;
+    }
 
     stripe
       .confirmPayment({
