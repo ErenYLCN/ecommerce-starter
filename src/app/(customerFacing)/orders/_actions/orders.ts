@@ -3,7 +3,7 @@
 import prisma from "@/core/db/db";
 
 export async function userOrderExists(email: string, productId: string) {
-  const order = prisma.order.findFirst({
+  const order = await prisma.order.findFirst({
     where: {
       user: { email },
       product: { id: productId },
