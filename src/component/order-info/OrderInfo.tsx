@@ -10,7 +10,7 @@ import {
 import { formatCurrency } from "@/core/util/format/formatUtils";
 
 type OrderInformationProps = {
-  order: { id: string; createdAt: Date; pricePaidInCents: number };
+  order: { id: string; createdAt: Date; priceInCents: number };
   product: { imagePath: string; name: string; description: string };
   downloadVerificationId: string;
 };
@@ -57,7 +57,7 @@ export function OrderInformation({
               {"Price Paid"}
             </Text>
             <Text className={"mt-0 mr-4"}>
-              {formatCurrency(order.pricePaidInCents / 100)}
+              {formatCurrency(order.priceInCents / 100)}
             </Text>
           </Column>
         </Row>
@@ -82,6 +82,7 @@ export function OrderInformation({
               className={"bg-black text-white px-6 py-4 rounded text-lg"}
             >
               {"Download"}
+              {`${process.env.NEXT_PUBLIC_SERVER_URL}${product.imagePath}`}
             </Button>
           </Column>
         </Row>
