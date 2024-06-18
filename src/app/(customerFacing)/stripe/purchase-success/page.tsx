@@ -14,9 +14,10 @@ export default async function SuccessPage({
 }: {
   searchParams: { payment_intent: string };
 }) {
-  const paymentIntent = await stripe.paymentIntents.retrieve(
-    searchParams.payment_intent,
-  );
+  const paymentIntent = await stripe.paymentIntents
+    .retrieve(searchParams.payment_intent)
+    .catch(() => notFound());
+
   if (paymentIntent.metadata.productId == null) return notFound();
 
   const product = await prisma.product.findUnique({
@@ -52,7 +53,7 @@ export default async function SuccessPage({
           <Button className={"mt-4"} size={"lg"} asChild>
             {isSuccess ? (
               <a
-                href={`/products/download/${await createDownloadVerification(
+                href={`/api/products/download/${await createDownloadVerification(
                   product.id,
                 )}`}
               >
