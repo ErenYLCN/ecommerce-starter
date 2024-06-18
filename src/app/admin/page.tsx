@@ -17,7 +17,7 @@ async function getSalesData() {
   });
 
   return {
-    amount: (data._sum.priceInCents || 0 / 100) / 100,
+    amount: (data._sum.priceInCents || 0) / 100,
     numberOfSales: data._count,
   };
 }
@@ -35,7 +35,9 @@ async function getUserData() {
   return {
     userCount,
     averageValuePerUser:
-      userCount === 0 ? 0 : orderData._sum.priceInCents || 0 / userCount / 100,
+      userCount === 0
+        ? 0
+        : (orderData._sum.priceInCents || 0) / userCount / 100,
   };
 }
 
