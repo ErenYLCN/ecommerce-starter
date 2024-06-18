@@ -11,7 +11,7 @@ export async function GET(req: NextRequest, { params: { downloadVerificationId }
     select: { product: { select: { filePath: true, name: true } } }
   })
 
-  if (data == null) return NextResponse.redirect(new URL("/products/download/expired", req.url))
+  if (data == null) return NextResponse.redirect(new URL("/products/download-expired", req.url))
 
   const { size } = await fs.stat(data.product.filePath)
   const file = await fs.readFile(data.product.filePath)
