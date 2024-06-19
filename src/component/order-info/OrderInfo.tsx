@@ -9,7 +9,7 @@ import {
 
 import { formatCurrency } from "@/core/util/format/formatUtils";
 
-type OrderInformationProps = {
+type OrderInfoProps = {
   order: { id: string; createdAt: Date; priceInCents: number };
   product: { imagePath: string; name: string; description: string };
   downloadVerificationId: string;
@@ -17,11 +17,11 @@ type OrderInformationProps = {
 
 const dateFormatter = new Intl.DateTimeFormat("en", { dateStyle: "medium" });
 
-export function OrderInformation({
+export function OrderInfo({
   order,
   product,
   downloadVerificationId,
-}: OrderInformationProps) {
+}: OrderInfoProps) {
   return (
     <>
       <Section>
@@ -82,7 +82,6 @@ export function OrderInformation({
               className={"bg-black text-white px-6 py-4 rounded text-lg"}
             >
               {"Download"}
-              {`${process.env.NEXT_PUBLIC_SERVER_URL}${product.imagePath}`}
             </Button>
           </Column>
         </Row>
