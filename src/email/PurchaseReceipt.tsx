@@ -8,7 +8,7 @@ import {
   Tailwind,
 } from "@react-email/components";
 
-import { OrderInformation } from "@/component/order-info/OrderInfo";
+import { OrderInfo } from "@/component/order-info/OrderInfo";
 
 type PurchaseReceiptEmailProps = {
   product: {
@@ -52,7 +52,7 @@ export default function PurchaseReceiptEmail({
         <Body className={"font-sans bg-white"}>
           <Container className={"max-w-xl"}>
             <Heading>{"Purchase Receipt"}</Heading>
-            <OrderInformation
+            <OrderInfo
               order={order}
               product={product}
               downloadVerificationId={downloadVerificationId}
