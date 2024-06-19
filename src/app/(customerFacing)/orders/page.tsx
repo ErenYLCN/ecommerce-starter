@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 
 import { Button } from "@/component/ui/button";
 import {
@@ -17,8 +17,10 @@ import { Label } from "@/component/ui/label";
 import { emailOrderHistory } from "./_actions/orders";
 
 export default function OrdersPage() {
+  const [data, action] = useFormState(emailOrderHistory, {});
+
   return (
-    <form action={emailOrderHistory} className={"max-w-2xl mx-auto"}>
+    <form action={action} className={"max-w-2xl mx-auto"}>
       <Card>
         <CardHeader>
           <CardTitle>{"My Orders"}</CardTitle>
@@ -33,7 +35,7 @@ export default function OrdersPage() {
           </div>
         </CardContent>
         <CardFooter>
-          <SubmitButton />
+          {data.message ? <p>{data.message}</p> : <SubmitButton />}
         </CardFooter>
       </Card>
     </form>
